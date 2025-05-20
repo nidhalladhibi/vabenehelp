@@ -1,0 +1,340 @@
+/* Register.css - Style moderne pour le formulaire d'inscription */
+
+:root {
+    --primary-color: #2563eb;
+    --primary-hover: #1d4ed8;
+    --secondary-color: #10b981;
+    --secondary-hover: #059669;
+    --error-color: #ef4444;
+    --text-primary: #111827;
+    --text-secondary: #6b7280;
+    --input-bg: #f9fafb;
+    --input-border: #e5e7eb;
+    --card-bg: #ffffff;
+    --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+  
+  /* Amélioration du conteneur principal */
+  .register-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    background-color: #f3f4f6;
+    background-image: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+  }
+  
+  /* Carte du formulaire */
+  .register-card {
+    width: 100%;
+    max-width: 500px;
+    background-color: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  
+  /* En-tête du formulaire */
+  .register-header {
+    padding: 24px 32px;
+    border-bottom: 1px solid var(--input-border);
+    text-align: center;
+  }
+  
+  .register-header h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin: 0 0 8px 0;
+  }
+  
+  .register-header p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin: 0;
+  }
+  
+  /* Corps du formulaire */
+  .register-form {
+    padding: 24px 32px 32px;
+  }
+  
+  /* Indicateur de progression */
+  .progress-steps {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 24px;
+  }
+  
+  .step-indicator {
+    display: flex;
+    align-items: center;
+  }
+  
+  .step-circle {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: var(--input-border);
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  
+  .step-circle.active {
+    background-color: var(--primary-color);
+    color: white;
+  }
+  
+  .step-circle.completed {
+    background-color: var(--secondary-color);
+    color: white;
+  }
+  
+  .step-line {
+    height: 2px;
+    width: 40px;
+    background-color: var(--input-border);
+    margin: 0 4px;
+  }
+  
+  .step-line.active {
+    background-color: var(--primary-color);
+  }
+  
+  /* Messages d'erreur */
+  .error-message {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: var(--error-color);
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    margin-bottom: 16px;
+  }
+  
+  /* Groupe de formulaire */
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+  }
+  
+  /* Boutons radio stylisés */
+  .radio-group {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  
+  .radio-option {
+    flex: 1;
+    border: 1px solid var(--input-border);
+    border-radius: 8px;
+    padding: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .radio-option.selected {
+    border-color: var(--primary-color);
+    background-color: rgba(37, 99, 235, 0.05);
+  }
+  
+  .radio-option-icon {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 8px;
+    font-size: 24px;
+    color: var(--text-secondary);
+  }
+  
+  .radio-option.selected .radio-option-icon {
+    color: var(--primary-color);
+  }
+  
+  .radio-option-label {
+    text-align: center;
+    font-weight: 500;
+  }
+  
+  /* Style pour les champs de formulaire */
+  .input-field {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--input-border);
+    border-radius: 8px;
+    background-color: var(--input-bg);
+    font-size: 14px;
+    transition: all 0.2s ease;
+  }
+  
+  .input-field:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+  }
+  
+  .input-field::placeholder {
+    color: #9ca3af;
+  }
+  
+  /* Style pour les cases à cocher des domaines */
+  .domains-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .domain-checkbox {
+    position: relative;
+    border: 1px solid var(--input-border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+  }
+  
+  .domain-checkbox:hover {
+    background-color: rgba(37, 99, 235, 0.05);
+  }
+  
+  .domain-checkbox.selected {
+    border-color: var(--primary-color);
+    background-color: rgba(37, 99, 235, 0.1);
+  }
+  
+  .domain-checkbox input {
+    margin-right: 10px;
+  }
+  
+  /* Boutons d'action */
+  .action-button {
+    width: 100%;
+    padding: 12px 16px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .primary-button {
+    background-color: var(--primary-color);
+    color: white;
+  }
+  
+  .primary-button:hover {
+    background-color: var(--primary-hover);
+  }
+  
+  .secondary-button {
+    background-color: var(--secondary-color);
+    color: white;
+  }
+  
+  .secondary-button:hover {
+    background-color: var(--secondary-hover);
+  }
+  
+  .back-button {
+    background-color: #e5e7eb;
+    color: var(--text-primary);
+  }
+  
+  .back-button:hover {
+    background-color: #d1d5db;
+  }
+  
+  .button-group {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+  }
+  
+  /* Lien de connexion */
+  .login-link {
+    text-align: center;
+    margin-top: 24px;
+    font-size: 14px;
+    color: var(--text-secondary);
+  }
+  
+  .login-link a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  
+  .login-link a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Section RTL pour l'arabe */
+  .rtl-section {
+    margin-top: 24px;
+    padding: 16px;
+    background-color: #f9fafb;
+    border-radius: 8px;
+    text-align: right;
+    direction: rtl;
+  }
+  
+  .rtl-section p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--text-secondary);
+  }
+  
+  /* Animation pour les transitions entre étapes */
+  .form-step {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Styles spécifiques à la partie des domaines d'expertise */
+  .expertise-section {
+    margin-bottom: 24px;
+  }
+  
+  .expertise-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+  }
+  
+  /* Responsivité */
+  @media (max-width: 640px) {
+    .domains-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .radio-group {
+      flex-direction: column;
+      gap: 10px;
+    }
+  }
