@@ -6,16 +6,14 @@ const asyncHandler = require('express-async-handler');
 const User = require('../models/User'); // Assure-toi que ce fichier existe
 const { protect } = require('../middleware/authMiddleware');
 
-// 🔑 Fonction utilitaire pour générer un token JWT
+
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: '30d',
   });
 };
 
-// 📌 @route   POST /api/auth/register
-// 📌 @desc    Register new user
-// 📌 @access  Public
+
 router.post('/register', asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
 

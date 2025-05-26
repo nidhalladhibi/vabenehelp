@@ -18,15 +18,15 @@ const app = express();
 connectDB();
 
 // 3. Middleware de sécurité
-app.use(helmet()); // Protection des en-têtes HTTP
-app.use(mongoSanitize()); // Prévention des injections NoSQL
-app.use(xss()); // Prévention des attaques XSS
-app.use(hpp()); // Prévention de la pollution des paramètres HTTP
+app.use(helmet());
+app.use(mongoSanitize());
+app.use(xss());
+app.use(hpp());
 
 // 4. Limitation du taux de requêtes
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limite de 100 requêtes par IP
+  max: 100,
   message: 'Vous avez dépassé la limite de requêtes autorisées. Veuillez réessayer plus tard.',
 });
 app.use('/api', limiter);
@@ -52,8 +52,7 @@ if (process.env.NODE_ENV === 'development') {
 app.get('/', (req, res) => {
   res.send('Bienvenue sur l’API');
 });
-// app.use('/api/v1', require('./routes/index')); // Routes principales
-app.use('/api/v1/notifications', require('./routes/notifications'));
+
 app.use('/api/v1/auth', require('./routes/auth'));
 app.use('/api/v1/users', require('./routes/users'));
 app.use('/api/v1/professionals', require('./routes/pros'));
@@ -83,7 +82,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // 11. Gestion des routes non trouvées
-app.all('*', (req, res, next) => {
+app.all('*', (req, res) => {
   res.status(404).json({
     status: 'fail',
     message: `Impossible de trouver ${req.originalUrl} sur ce serveur.`,

@@ -47,7 +47,7 @@ router.get('/', asyncHandler(async (req, res) => {
 // 📌 @route   GET /api/ratings/:id
 // 📌 @desc    Obtenir une note par ID
 // 📌 @access  Public
-router.get('/:id/', asyncHandler(async (req, res) => {
+router.get('/:id', asyncHandler(async (req, res) => {
   const rating = await Rating.findById(req.params.id)
     .populate('user', 'name');
 

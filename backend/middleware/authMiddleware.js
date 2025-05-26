@@ -1,33 +1,29 @@
 const jwt = require('jsonwebtoken');
 const asyncHandler = require('express-async-handler');
-const User = require('../models/User'); // Assurez-vous que le modèle User est correctement défini
-const Professional = require('../models/Professional'); // Assurez-vous que le modèle Professional est correctement défini
+const User = require('../models/User');
+const Professional = require('../models/Professional');
 
-// Middleware protect : Vérifie le token JWT
+// 🛡️ Middleware: Vérifie le token JWT
 const protect = asyncHandler(async (req, res, next) => {
   let token;
 
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith('Bearer')
-  ) {
+  if (req.headers.authorization?.startsWith('Bearer')) {
     try {
-      // Extraire le token de l'en-tête Authorization
+      // Extraire et vérifier le token
       token = req.headers.authorization.split(' ')[1];
-
-      // Vérifier et décoder le token
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-      // Récupérer l'utilisateur correspondant au token
-      req.user = await User.findById(decoded.id).select('-password');
-
-      if (!req.user) {
+      // Attacher l'utilisateur au req
+      const user = await User.findById(decoded.id).select('-password');
+      if (!user) {
         res.status(401);
         throw new Error('Utilisateur non trouvé');
       }
 
+      req.user = user;
       next();
     } catch (error) {
+      console.error('Erreur de token :', error.message);
       res.status(401);
       throw new Error('Non autorisé, token invalide');
     }
@@ -37,7 +33,7 @@ const protect = asyncHandler(async (req, res, next) => {
   }
 });
 
-// Middleware professionalOnly : Vérifie si l'utilisateur est un professionnel
+// 🧑‍🔧 Middleware: Vérifie si l’utilisateur est un professionnel
 const professionalOnly = asyncHandler(async (req, res, next) => {
   if (!req.user) {
     res.status(401);
@@ -45,13 +41,12 @@ const professionalOnly = asyncHandler(async (req, res, next) => {
   }
 
   const professional = await Professional.findOne({ user: req.user._id });
-
   if (!professional) {
     res.status(403);
     throw new Error('Accès réservé aux professionnels');
   }
 
-  req.professional = professional; // Attacher le profil professionnel à la requête si nécessaire
+  req.professional = professional;
   next();
 });
 
