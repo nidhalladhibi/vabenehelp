@@ -11,86 +11,91 @@ const connectDB = require('./config/db');
 const errorHandler = require('./middleware/error');
 require('dotenv').config();
 
-// 1. Création de l'application Express
+// Create Express app
 const app = express();
 
-// 2. Connexion à la base de données
+// Connect to database
 connectDB();
 
-// 3. Middleware de sécurité
+// Security middleware
 app.use(helmet());
 app.use(mongoSanitize());
 app.use(xss());
 app.use(hpp());
 
-// 4. Limitation du taux de requêtes
+// Rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100,
-  message: 'Vous avez dépassé la limite de requêtes autorisées. Veuillez réessayer plus tard.',
+  message: 'Rate limit exceeded. Please try again later.',
 });
 app.use('/api', limiter);
 
-// 5. Activation de CORS
+// Enable CORS
 app.use(cors({
   origin: process.env.CORS_ORIGIN || '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
-// 6. Gestion des données des requêtes
+// Body parser
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 
-// 7. Journalisation des requêtes (en mode développement uniquement)
+// Request logging (development only)
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
-  console.log('📝 Journalisation des requêtes activée (mode développement)');
+  console.log('Request logging enabled (development mode)');
 }
 
-// 8. Définition des routes API
+// API Routes
 app.get('/', (req, res) => {
-  res.send('Bienvenue sur l’API');
+  res.send('Welcome to the API');
 });
 
-app.use('/api/v1/auth', require('./routes/auth'));
-app.use('/api/v1/users', require('./routes/users'));
-app.use('/api/v1/professionals', require('./routes/pros'));
-app.use('/api/v1/services', require('./routes/services'));
-app.use('/api/v1/orders', require('./routes/orders'));
-app.use('/api/v1/ratings', require('./routes/ratings'));
+// Mount routes
+const authRoutes = require('./routes/auth');
+const userRoutes = require('./routes/users');
+const professionalRoutes = require('./routes/pros');
+const serviceRoutes = require('./routes/services');
+const orderRoutes = require('./routes/orders');
+const ratingRoutes = require('./routes/ratings');
 
-// 9. Route de santé publique pour vérifier l'état de l'API
+app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/professionals', professionalRoutes);
+app.use('/api/v1/services', serviceRoutes);
+app.use('/api/v1/orders', orderRoutes);
+app.use('/api/v1/ratings', ratingRoutes);
+
+// Health check route
 app.get('/api/v1/health', (req, res) => {
   res.status(200).json({
     status: 'success',
-    message: '✅ L\'API fonctionne correctement',
+    message: 'API is running',
     timestamp: new Date(),
     version: '1.0.0',
   });
 });
 
-// 10. Gestion des fichiers statiques en mode production
+// Static files in production
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../frontend/build')));
 
   app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, '../frontend/build/index.html'));
   });
-
-  console.log('🚀 Mode production activé');
 }
 
-// 11. Gestion des routes non trouvées
-app.all('*', (req, res) => {
+// 404 handler
+app.use((req, res) => {
   res.status(404).json({
     status: 'fail',
-    message: `Impossible de trouver ${req.originalUrl} sur ce serveur.`,
+    message: `Cannot find ${req.originalUrl} on this server.`,
   });
 });
 
-// 12. Gestionnaire d'erreurs global
+// Global error handler
 app.use(errorHandler);
 
-// 13. Exportation de l'application pour les tests ou le serveur
 module.exports = app;

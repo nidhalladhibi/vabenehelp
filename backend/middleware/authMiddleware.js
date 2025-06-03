@@ -3,47 +3,47 @@ const asyncHandler = require('express-async-handler');
 const User = require('../models/User');
 const Professional = require('../models/Professional');
 
-// 🛡️ Middleware: Vérifie le token JWT
+// Middleware: Verify JWT token
 const protect = asyncHandler(async (req, res, next) => {
   let token;
 
-  if (req.headers.authorization?.startsWith('Bearer')) {
+  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     try {
-      // Extraire et vérifier le token
+      // Extract and verify token
       token = req.headers.authorization.split(' ')[1];
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-      // Attacher l'utilisateur au req
+      // Attach user to request
       const user = await User.findById(decoded.id).select('-password');
       if (!user) {
         res.status(401);
-        throw new Error('Utilisateur non trouvé');
+        throw new Error('User not found');
       }
 
       req.user = user;
       next();
     } catch (error) {
-      console.error('Erreur de token :', error.message);
+      console.error('Token error:', error.message);
       res.status(401);
-      throw new Error('Non autorisé, token invalide');
+      throw new Error('Not authorized, invalid token');
     }
   } else {
     res.status(401);
-    throw new Error('Non autorisé, pas de token');
+    throw new Error('Not authorized, no token');
   }
 });
 
-// 🧑‍🔧 Middleware: Vérifie si l’utilisateur est un professionnel
+// Middleware: Check if user is a professional
 const professionalOnly = asyncHandler(async (req, res, next) => {
   if (!req.user) {
     res.status(401);
-    throw new Error('Non autorisé, utilisateur non authentifié');
+    throw new Error('Not authorized, user not authenticated');
   }
 
   const professional = await Professional.findOne({ user: req.user._id });
   if (!professional) {
     res.status(403);
-    throw new Error('Accès réservé aux professionnels');
+    throw new Error('Access restricted to professionals');
   }
 
   req.professional = professional;

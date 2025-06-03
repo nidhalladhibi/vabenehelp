@@ -17,14 +17,14 @@ const generateToken = (id) => {
 router.post('/register', asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
 
-  // Vérifier si l'utilisateur existe
+  // Check if user exists
   const userExists = await User.findOne({ email });
   if (userExists) {
     res.status(400);
-    throw new Error('Utilisateur déjà existant');
+    throw new Error('User already exists');
   }
 
-  // Créer un nouvel utilisateur
+  // Create new user
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
 
@@ -43,17 +43,15 @@ router.post('/register', asyncHandler(async (req, res) => {
     });
   } else {
     res.status(400);
-    throw new Error("Données invalides lors de l'enregistrement");
+    throw new Error('Invalid user data');
   }
 }));
 
-// 📌 @route   POST /api/auth/login
-// 📌 @desc    Login user
-// 📌 @access  Public
+// Login route
 router.post('/login', asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
-  // Vérifie l'utilisateur
+  // Check for user
   const user = await User.findOne({ email });
 
   if (user && (await bcrypt.compare(password, user.password))) {
@@ -65,13 +63,11 @@ router.post('/login', asyncHandler(async (req, res) => {
     });
   } else {
     res.status(401);
-    throw new Error('Email ou mot de passe invalide');
+    throw new Error('Invalid email or password');
   }
 }));
 
-// 📌 @route   GET /api/auth/me
-// 📌 @desc    Get current user
-// 📌 @access  Private
+// Get current user route
 router.get('/me', protect, asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id).select('-password');
   res.status(200).json(user);
